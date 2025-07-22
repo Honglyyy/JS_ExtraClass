@@ -36,35 +36,15 @@ const getPost = async () => {
     const response = await fetch('https://jsonplaceholder.typicode.com/posts');
 
     if (response.ok) {
-        posts = await response.json();
-
-        // Group posts by userId
-        const grouped = {};
-        posts.forEach(post => {
-            if (!grouped[post.userId]) {
-                grouped[post.userId] = [];
-            }
-            grouped[post.userId].push(post);
-        });
-
-        // Render posts per user
-        for (const userId in grouped) {
-            // User section title
-            postsContainer.innerHTML += `
-                <div class="col-span-full mt-6">
-                    <h2 class="text-3xl font-bold text-gray-700">User ${userId}</h2>
-                </div>
-            `;
-
-            // Render each post under this user
-            grouped[userId].forEach(post => {
-                postsContainer.innerHTML += renderPosts(post);
-            });
-        }
-    } else {
-        document.body.innerHTML = "<h1 class='text-center text-red-500 text-2xl mt-10'>Failed to fetch posts.</h1>";
+        const posts = await response.json();
+        posts.forEach(post =>{
+            postsContainer.innerHTML += renderPosts(post)
+        })
+    }
+    else{
+        console.log("Failed to fetch API");
+        
     }
 };
-
 
 getPost()

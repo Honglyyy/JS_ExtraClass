@@ -1,124 +1,52 @@
-const form = document.getElementById("contactForm");
-const cardContainer = document.getElementById("cardContainer");
+const formData = document.getElementById('formData');
+const rowData = document.getElementById('rowData');
 
-let editingCard = null; // Track the card being edited
+const customers = [];
 
-function createCard(name, phone, address) {
-  const card = document.createElement("div");
-  card.className = "cards bg-white rounded-3xl shadow-lg p-8 hover:shadow-indigo-400 transition-shadow duration-300 cursor-pointer relative group";
-
-  card.innerHTML = `
-    <h3 class="text-xl font-semibold text-gray-900 mb-2">
-      Name: <span class="font-normal name-text">${name}</span>
-    </h3>
-    <h3 class="text-xl font-semibold text-gray-900 mb-2">
-      Phone: <span class="font-normal phone-text">${phone}</span>
-    </h3>
-    <h3 class="text-xl font-semibold text-gray-900">
-      Address: <span class="font-normal address-text">${address}</span>
-    </h3>
-
-    <div class="absolute top-4 right-4 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-      <button class="edit-btn bg-yellow-400 hover:bg-yellow-500 p-2 rounded-full shadow-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" title="Edit">
-        Edit
-      </button>
-      <button class="delete-btn bg-red-600 hover:bg-red-700 p-2 rounded-full shadow-lg text-white focus:outline-none focus:ring-2 focus:ring-red-600" title="Delete">
-        Delete
-      </button>
-    </div>
-  `;
-
-  // Edit button
-  card.querySelector(".edit-btn").addEventListener("click", (e) => {
-    e.preventDefault();
-    editingCard = card;
-
-    form.name.value = card.querySelector(".name-text").textContent;
-    form.phone.value = card.querySelector(".phone-text").textContent;
-    form.address.value = card.querySelector(".address-text").textContent;
-
-    form.querySelector("button[type='submit']").textContent = "Update";
+const renderData = () => {
+  rowData.innerHTML = ''; // Clear old data before re-rendering
+  customers.forEach(customer => {
+    rowData.innerHTML += `
+      <div class="col-3 p-3">
+        <div class="w-100 p-3 shadow-lg rounded-2">
+          <h4>${customer.name}</h4>
+          <p class="m-0 py-1">📞${customer.number}</p>
+          <p class="m-0">📍${customer.location}</p>
+          <div class="pt-3 w-100 d-flex justify-content-evenly">
+            <button class="btn text-white btn-warning">Edit</button>
+            <button class="btn text-white btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
   });
+};
 
-  // Delete button
-  card.querySelector(".delete-btn").addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const name = card.querySelector(".name-text").textContent;
-
-    card.remove();
-
-    if (editingCard === card) {
-      editingCard = null;
-      form.reset();
-      form.querySelector("button[type='submit']").textContent = "Submit";
-    }
-
-    Toastify({
-      text: `${name} deleted`,
-      duration: 2500,
-      close: true,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "linear-gradient(to right, #dc2626, #b91c1c)",
-      stopOnFocus: true,
-    }).showToast();
-  });
-
-  return card;
-}
-
-form.addEventListener("submit", (e) => {
+formData.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  const name = form.name.value.trim();
-  const phone = form.phone.value.trim();
-  const address = form.address.value.trim();
+const nameEl = document.getElementById('customerName');
+const numberEl = document.getElementById('customerNumber');
+const locationEl = document.getElementById('customerLocation');
 
-  if (!name || !phone || !address) {
-    Toastify({
-      text: "Please fill out all fields.",
-      duration: 2500,
-      close: true,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "linear-gradient(to right, #ef4444, #b91c1c)",
-      stopOnFocus: true,
-    }).showToast();
+  const name = nameEl.value.trim();
+  const number = numberEl.value.trim();
+  const location = locationEl.value.trim();
+
+  if (!name || !number || !location) {
+    alert("Please fill in all fields");
     return;
   }
 
-  if (editingCard) {
-    editingCard.querySelector(".name-text").textContent = name;
-    editingCard.querySelector(".phone-text").textContent = phone;
-    editingCard.querySelector(".address-text").textContent = address;
+  customers.push({ name, number, location });
 
-    Toastify({
-      text: "Contact updated!",
-      duration: 2500,
-      close: true,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "linear-gradient(to right, #10b981, #047857)",
-      stopOnFocus: true,
-    }).showToast();
+  renderData();
 
-    editingCard = null;
-    form.querySelector("button[type='submit']").textContent = "Submit";
-  } else {
-    const newCard = createCard(name, phone, address);
-    cardContainer.appendChild(newCard);
-
-    Toastify({
-      text: "Contact saved successfully!",
-      duration: 3000,
-      close: true,
-      gravity: "top",
-      position: "right",
-      backgroundColor: "linear-gradient(to right, #10b981, #047857)",
-      stopOnFocus: true,
-    }).showToast();
-  }
-
-  form.reset();
+  // Clear form fields after submission
+  nameEl.value = '';
+  numberEl.value = '';
+  locationEl.value = '';
 });
+
+// Initial render
+renderData();
