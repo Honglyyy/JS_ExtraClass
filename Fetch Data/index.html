@@ -1,11 +1,322 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopHub - Your Ultimate Shopping Destination</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                animation: {
+                    'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+                    'shimmer': 'shimmer 2s linear infinite',
+                    'bounce-slow': 'bounce 3s infinite',
+                },
+                keyframes: {
+                    'pulse-glow': {
+                        '0%, 100%': { opacity: '1' },
+                        '50%': { opacity: '0.5' },
+                    },
+                    'shimmer': {
+                        '0%': { transform: 'translateX(-100%)' },
+                        '100%': { transform: 'translateX(100%)' },
+                    }
+                },
+                colors: {
+                    'brand': {
+                        50: '#eff6ff',
+                        500: '#3b82f6',
+                        600: '#2563eb',
+                        700: '#1d4ed8',
+                    }
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+    }
     
+    .hero-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .card-hover {
+        transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .star-filled {
+        color: #fbbf24;
+    }
+    
+    .star-empty {
+        color: #d1d5db;
+    }
+
+    .loading-dots::after {
+        content: '';
+        animation: dots 1.5s steps(5, end) infinite;
+    }
+
+    @keyframes dots {
+        0%, 20% { content: ''; }
+        40% { content: '.'; }
+        60% { content: '..'; }
+        80%, 100% { content: '...'; }
+    }
+</style>
+</head>
+<body class="bg-gray-50">
+<!-- Navigation Header -->
+<nav class="bg-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <i class="fas fa-shopping-bag text-2xl text-brand-600 mr-2"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">ShopHub</h1>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="hidden md:block flex-1 max-w-lg mx-8">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="Search products..." 
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                    >
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+
+<!-- Navigation Links -->
+            <div class="flex items-center space-x-6">
+                <a href="#" class="text-gray-700 hover:text-brand-600 font-medium">Home</a>
+                <a href="#" class="text-gray-700 hover:text-brand-600 font-medium">Categories</a>
+                <a href="#" class="text-gray-700 hover:text-brand-600 font-medium">Deals</a>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-700 hover:text-brand-600 relative">
+                        <i class="fas fa-heart text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                    <button class="text-gray-700 hover:text-brand-600 relative">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-brand-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="cartCount">0</span>
+                    </button>
+                    <button class="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-gradient text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-5xl md:text-6xl font-bold mb-6">
+            Discover Amazing Products
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 text-blue-100">
+            Shop the latest trends with unbeatable prices and fast delivery
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button class="bg-white text-brand-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                Shop Now
+            </button>
+            <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-brand-600 transition-colors">
+                Learn More
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Stats Section -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+        <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+            <i class="fas fa-truck text-3xl text-brand-600 mb-2"></i>
+            <h3 class="font-semibold text-gray-900">Free Shipping</h3>
+            <p class="text-gray-600 text-sm">On orders over $50</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+            <i class="fas fa-shield-alt text-3xl text-green-600 mb-2"></i>
+            <h3 class="font-semibold text-gray-900">Secure Payment</h3>
+            <p class="text-gray-600 text-sm">100% protected</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+            <i class="fas fa-undo text-3xl text-yellow-600 mb-2"></i>
+            <h3 class="font-semibold text-gray-900">Easy Returns</h3>
+            <p class="text-gray-600 text-sm">30-day policy</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+            <i class="fas fa-headset text-3xl text-purple-600 mb-2"></i>
+            <h3 class="font-semibold text-gray-900">24/7 Support</h3>
+            <p class="text-gray-600 text-sm">Always here to help</p>
+        </div>
+    </div>
+
+
+<!-- Filter and Sort Section -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900">Featured Products</h2>
+                <p class="text-gray-600 mt-1">Discover our handpicked collection</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <!-- Category Filter -->
+                <select id="categoryFilter" class="border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-brand-500 focus:border-transparent min-w-[180px]">
+                    <option value="">All Categories</option>
+                    <option value="men's clothing">Men's Clothing</option>
+                    <option value="women's clothing">Women's Clothing</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="jewelery">Jewelry</option>
+                </select>
+                
+                <!-- Sort Filter -->
+                <select id="sortFilter" class="border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-brand-500 focus:border-transparent min-w-[180px]">
+                    <option value="">Sort by</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating-high">Highest Rated</option>
+                    <option value="rating-low">Lowest Rated</option>
+                    <option value="name-az">Name: A to Z</option>
+                    <option value="name-za">Name: Z to A</option>
+                </select>
+
+                <!-- Price Range -->
+                <div class="flex items-center space-x-2">
+                    <input type="number" id="minPrice" placeholder="Min $" class="border border-gray-300 rounded-lg px-3 py-2 w-20 text-sm">
+                    <span class="text-gray-500">-</span>
+                    <input type="number" id="maxPrice" placeholder="Max $" class="border border-gray-300 rounded-lg px-3 py-2 w-20 text-sm">
+                    <button id="applyPriceFilter" class="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors text-sm">
+                        Apply
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Filters -->
+        <div id="activeFilters" class="mt-4  flex-wrap gap-2 hidden">
+            <span class="text-sm text-gray-600">Active filters:</span>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-brand-600 mb-4"></div>
+        <p class="text-gray-600 loading-dots">Loading amazing products</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="text-center py-12 hidden">
+        <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Oops! Something went wrong</h3>
+        <p class="text-gray-600 mb-4">We couldn't load the products. Please try again.</p>
+        <button id="retryButton" class="bg-brand-600 text-white px-6 py-2 rounded-lg hover:bg-brand-700 transition-colors">
+            Try Again
+        </button>
+    </div>
+
+    <!-- Products Grid -->
+    <div id="productsGrid" class=" grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 hidden">
+        <!-- Products will be inserted here -->
+    </div>
+
+ROUNG CHANRITH, [7/21/2025 10:58 PM]
+<!-- No Results -->
+    <div id="noResults" class="text-center py-12 hidden">
+        <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
+        <p class="text-gray-600">Try adjusting your filters or search terms</p>
+    </div>
+
+    <!-- Load More Button -->
+    <div class="text-center mt-12">
+        <button id="loadMoreBtn" class="bg-brand-600 text-white px-8 py-3 rounded-lg hover:bg-brand-700 transition-colors font-semibold hidden">
+            Load More Products
+        </button>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-shopping-bag text-2xl text-brand-400 mr-2"></i>
+                    <h3 class="text-xl font-bold">ShopHub</h3>
+                </div>
+                <p class="text-gray-400 mb-4">Your ultimate shopping destination for quality products at unbeatable prices.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">Shipping Info</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Categories</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-400 hover:text-white">Men's Fashion</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">Women's Fashion</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">Electronics</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">Jewelry</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Newsletter</h4>
+                <p class="text-gray-400 mb-4">Subscribe to get updates on new products and offers.</p>
+                <div class="flex">
+                    <input type="email" placeholder="Your email" class="flex-1 px-4 py-2 rounded-l-lg text-gray-900">
+                    <button class="bg-brand-600 px-4 py-2 rounded-r-lg hover:bg-brand-700 transition-colors">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+            <p class="text-gray-400">&copy; 2024 ShopHub. All rights reserved. Made with ❤️ for amazing shoppers.</p>
+        </div>
+    </div>
+</footer>
 </body>
+<script src="script.js"></script>
 </html>

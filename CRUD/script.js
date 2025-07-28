@@ -1,5 +1,7 @@
 const formData = document.getElementById('formData');
 const rowData = document.getElementById('rowData');
+const userIndex = document.getElementById('userIndex');
+
 
 const customerName = document.getElementById('customerName');
 const customerNumber = document.getElementById('customerNumber');
@@ -19,7 +21,7 @@ const renderData = () => {
             <p class="card-text">📍 ${customer.location}</p>
             <div class="pt-3 w-100 d-flex justify-content-evenly">
              <button class="btn text-white btn-warning">✏️Edit</button>
-             <button class="btn text-white btn-danger">🗑️Delete</button>
+             <button class="btn text-white btn-danger" onClick="edit(${index})">🗑️Delete</button>
            </div>
          </div>
           </div>
@@ -38,8 +40,12 @@ formData.addEventListener('submit', (e) => {
   if (!name || !number || !location) {
     return;
   }
-
-  customers.push({ name, number, location });
+  if(userIndex.value === ""){
+    customers.push({ name, number, location });
+  }else{
+    const index = userIndex.value;
+    customers[index] = { name, number, location };
+  }
 
   renderData();
 
@@ -58,6 +64,7 @@ formData.addEventListener('submit', (e) => {
     stopOnFocus: true
   }).showToast();
 });
+
 
 // Initial render (optional)
 renderData();
