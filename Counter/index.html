@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+
+        }
+        main{
+            font-size: 3rem;
+            color: black;
+        }
+        button{
+            width: 40px;
+            height: 40px;
+            padding: 3px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <main></main>
+        <div>
+            <button onclick="increase()">+</button>
+            <button onclick="decrease()">-</button>
+        </div>
+        <p>The value is <span></span> than 15</p>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>
